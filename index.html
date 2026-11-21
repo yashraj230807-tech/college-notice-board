@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Notice Board</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      margin: 0;
+      padding: 16px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #3b2a78, #6a4fc7);
+      color: #fff;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      border-radius: 12px;
+      border-bottom: 6px solid #ff6fa5;
+      text-align: center;
+      box-shadow: 0 0 8px #666;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: 1px;
+    }
+
+    header hr {
+      width: 60px;
+      border: 0;
+      border-top: 3px solid #fbc2eb;
+      margin: 14px auto;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 16px;
+      color: #ffe3f1;
+    }
+
+    section {
+      background-color: #ffffff;
+      max-width: 400px;
+      margin: 16px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #666;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      background-color: #fff8e1;
+      border: 2px solid #3b2a78;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      color: #fff;
+      border: 0;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Step 1 - pink */
+    .one { border-top: 6px solid #ff6fa5; }
+    .one h2 { color: #d6336c; }
+    .one button { background-color: #ff6fa5; }
+    .one button:hover { background-color: #d6336c; }
+
+    /* Step 2 - purple */
+    .two { border-top: 6px solid #7a5af8; }
+    .two h2 { color: #5a3fd0; }
+    .two button { background-color: #7a5af8; }
+    .two button:hover { background-color: #5a3fd0; }
+
+    /* Step 3 - green */
+    .three { border-top: 6px solid #20c997; background-color: #f0fbf6; }
+    .three h2 { color: #0b8a63; }
+    .three button { background-color: #20c997; }
+    .three button:hover { background-color: #0b8a63; }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      color: #3b2a78;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>College Notice Board</h1>
+    <hr>
+    <p>Sign up, login and read your notices</p>
+  </header>
+
+  <main>
+
+    <section class="one">
+      <h2>Step 1: Student Sign Up</h2>
+      <form onsubmit="return checkSignup()">
+        <label for="name">Full name</label><br>
+        <input type="text" id="name"><br>
+        <span class="error" id="e_name"></span><br>
+
+        <label for="roll">Roll No.</label><br>
+        <input type="text" id="roll"><br>
+        <span class="error" id="e_roll"></span><br>
+
+        <label for="email">Email</label><br>
+        <input type="text" id="email"><br>
+        <span class="error" id="e_email"></span><br>
+
+        <label for="password">Password</label><br>
+        <input type="password" id="password"><br>
+        <span class="error" id="e_pass"></span><br>
+
+        <label for="cpassword">Confirm Password</label><br>
+        <input type="password" id="cpassword"><br>
+        <span class="error" id="e_cpass"></span><br>
+
+        <button>Sign Up</button>
+      </form>
+      <p class="success" id="signupMsg"></p>
+    </section>
+
+    <section class="two">
+      <h2>Step 2: Student Login</h2>
+      <form onsubmit="return checkLogin()">
+        <label for="loginRoll">Roll No.</label><br>
+        <input type="text" id="loginRoll"><br><br>
+
+        <label for="loginPass">Password</label><br>
+        <input type="password" id="loginPass"><br>
+
+        <button>Login</button>
+      </form>
+      <p class="error" id="loginError"></p>
+    </section>
+
+    <section class="three">
+      <h2>Step 3: Notices</h2>
+      <p id="welcome">Please login to see the notices.</p>
+      <p id="notice1"></p>
+      <p id="notice2"></p>
+      <button onclick="logout()">Logout</button>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 College Notice Board</p>
+  </footer>
+
+  <script>
+    // Notices (leave both empty to show "no notices")
+    var notice1 = "1. Mid-semester exams start from 1 December 2026.";
+    var notice2 = "2. Web Design lab viva on Monday in Lab 3.";
+
+    // Details of the one student who signed up
+    var studentName = "";
+    var studentRoll = "";
+    var studentPass = "";
+
+    function checkSignup() {
+      var name = document.getElementById("name").value.trim();
+      var roll = document.getElementById("roll").value.trim();
+      var email = document.getElementById("email").value.trim();
+      var pass = document.getElementById("password").value;
+      var cpass = document.getElementById("cpassword").value;
+      var errors = 0;
+
+      document.getElementById("e_name").textContent = "";
+      document.getElementById("e_roll").textContent = "";
+      document.getElementById("e_email").textContent = "";
+      document.getElementById("e_pass").textContent = "";
+      document.getElementById("e_cpass").textContent = "";
+      document.getElementById("signupMsg").textContent = "";
+
+      if (name === "") {
+        document.getElementById("e_name").textContent = "Please enter your name.";
+        errors = errors + 1;
+      }
+      if (isNaN(parseInt(roll))) {
+        document.getElementById("e_roll").textContent = "Roll number must be a number.";
+        errors = errors + 1;
+      }
+      if (email === "") {
+        document.getElementById("e_email").textContent = "Please enter your email.";
+        errors = errors + 1;
+      }
+      if (pass === "") {
+        document.getElementById("e_pass").textContent = "Please enter a password.";
+        errors = errors + 1;
+      }
+      if (pass !== cpass) {
+        document.getElementById("e_cpass").textContent = "Passwords do not match.";
+        errors = errors + 1;
+      }
+
+      if (errors === 0) {
+        studentName = name;
+        studentRoll = roll;
+        studentPass = pass;
+        document.getElementById("signupMsg").textContent = "Sign up successful! Now login in Step 2.";
+      }
+      return false;   // stay on the same page
+    }
+
+    function checkLogin() {
+      var roll = document.getElementById("loginRoll").value.trim();
+      var pass = document.getElementById("loginPass").value;
+      document.getElementById("loginError").textContent = "";
+
+      if (studentRoll !== "" && roll === studentRoll && pass === studentPass) {
+        document.getElementById("welcome").textContent = "Welcome, " + studentName + " (Roll No. " + studentRoll + ")";
+        if (notice1 === "" && notice2 === "") {
+          document.getElementById("notice1").textContent = "There are no notices right now.";
+        } else {
+          document.getElementById("notice1").textContent = notice1;
+          document.getElementById("notice2").textContent = notice2;
+        }
+      } else {
+        document.getElementById("loginError").textContent = "Wrong roll number or password, or please sign up first.";
+      }
+      return false;   // stay on the same page
+    }
+
+    function logout() {
+      document.getElementById("welcome").textContent = "Please login to see the notices.";
+      document.getElementById("notice1").textContent = "";
+      document.getElementById("notice2").textContent = "";
+    }
+  </script>
+</body>
+</html>
